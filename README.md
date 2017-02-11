@@ -4,7 +4,7 @@ This is a string manipulation tool for people who don't like very long comma sep
 
 ## Features
 
-\!\[feature X\]\(images/feature-x.png\)
+\!\[feature X\]\(images/break-from-comma.gif\)
 
 - Considers both single and double quotations
 - Automatically indents the lines
@@ -33,7 +33,7 @@ Via the command line:
 ```
 [
     {
-        "key": "cmd+shift+b", // Or "ctrl+shift+b"
+        "key": "ctrl+shift+b",
         "command": "extension.breakFromComma",
         "when": "editorTextFocus && !editorReadonly"
     }
