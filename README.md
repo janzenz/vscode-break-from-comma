@@ -4,7 +4,7 @@ This is a string manipulation tool for people who don't like very long comma sep
 
 ## Features
 
-\!\[feature X\]\(images/break-from-comma.gif\)
+\!\[In Action\]\(images/break-from-comma.gif\)
 
 - Considers both single and double quotations
 - Automatically indents the lines
