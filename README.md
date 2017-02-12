@@ -48,6 +48,8 @@ VSCode 1.5+
 
 ## Known Issues
 
+It doesn't support multi select at the moment so feel free to submit your PRs.
+
 For any bugs and feature requests please open an issue. For code contributions please create a pull request. Enjoy!
 
 ## Release Notes
