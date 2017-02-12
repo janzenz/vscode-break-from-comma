@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- New Line support
+```
+{ a,
+  b,
+  c }
+```
+to
+```
+{
+    a,
+    b,
+    c
+}
+```
+
+## [Unreleased]
+### Added
+- Multiple Cursor support
 - ES6
 - ESLint
 - Tests

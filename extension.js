@@ -6,16 +6,34 @@ function activate(context) {
 
     console.log('Congratulations, your extension "break-from-comma" is now active!');
 
-    var disposable = vscode.commands.registerCommand('extension.breakFromComma', function () {
-        var editor = vscode.window.activeTextEditor;
+    const disposable = vscode.commands.registerCommand('extension.breakFromComma', () => {
+        const editor = vscode.window.activeTextEditor
 
         if (!editor) {
-            return;
+            return
         }
 
-        const { document, selection } = editor;
+        const { document, selection } = editor
 
-        const { text, range } = getSelectedText(selection, document);
+        if (selection.isEmpty) {
+            return
+        }
+
+        const text = document.getText(selection)
+
+        // Range of selection to be replaced
+        let range = new vscode.Range(selection.start, selection.end)
+        
+        const entireLine = document.lineAt(selection.start.line)
+        const remainingLine = document.getText(new vscode.Range(selection.end, entireLine.range.end))
+        // Count the leading spaces and include it in the selection range if any
+        const leadingSpaces = remainingLine.search(/\S/)
+        if (leadingSpaces > 0) {
+            range = new vscode.Range(selection.start.line,
+                                        selection.start.character, 
+                                        selection.start.line,
+                                        selection.end.character + leadingSpaces)
+        }
 
         /**
          * RegEx Explanation
@@ -23,70 +41,40 @@ function activate(context) {
          (?=             look ahead to see if there is:
          (?:             group, but do not capture (0 or more times):
          (?:             group, but do not capture (2 times):
-          [^"]*          any character except: '"' (0 or more times)
-          "              '"'
+          [^'"]*         any character except: '"' (0 or more times)
+         (?:'|")"        '"'
          ){2}            end of grouping
          )*              end of grouping
-          [^"]*          any character except: '"' (0 or more times)
+         [^'"]*         any character except: '"' (0 or more times)
          $               before an optional \n, and the end of the string
          )               end of look-ahead
          */
         let linesToIndent = text.split(/,(?=(?:(?:[^'"]*(?:'|")){2})*[^'"]*$)/)
                             .map(t => t.replace(/\s/g,'') + ',')
-        // Remove the last comma
-        linesToIndent[linesToIndent.length-1] = linesToIndent[linesToIndent.length-1].slice(0,-1)
+
+        const indentChar = editor.options.insertSpaces ? ' ' : '\t';
+        const start = editor.selection.start;
+        const offset = Math.ceil(start.character / editor.options.tabSize) * editor.options.tabSize;
+        const chars = indentChar.repeat(offset)
+        const lastOffset = offset - editor.options.tabSize
+        const lastIndent = (lastOffset > 0) ? indentChar.repeat(lastOffset) : ''
         
-        let leadingSpaces = [];
-        let indentChar = editor.options.insertSpaces ? ' ' : '\t';
-        let xmin; // The minimum amount of leading space amongst the non-empty lines
-        let start = editor.selection.start;
-        let offset = start.character;
-
-        // Find out what is the minimum leading space of the non empty lines (xmin)
-        linesToIndent.forEach((line, index) => {
-            let _xmin = line.search(/\S/); // -1 means the line is blank (full of space characters)
-            let numberOfTabs;
-            if (_xmin !== -1) {
-                // Normalize the line according to the indentation preferences
-                if (editor.options.insertSpaces) { // When we are in SPACE mode
-                    numberOfTabs = line.substring(0, _xmin).split(/\t/).length - 1;
-                    _xmin += numberOfTabs * (Number(editor.options.tabSize) - 1);
-                } else { // When we are in TAB mode
-                    // Reduce _xmin by how many space characters are in the line
-                    _xmin -= (line.substring(0, _xmin).match(/[^\t]+/g) || []).length;
-                }
-                if (index > 0 && (typeof xmin === 'undefined' || xmin > _xmin)) {
-                    xmin = _xmin;
-                }
-            }
-            leadingSpaces[index] = _xmin;
-        });
-
-        if (xmin === 0 && offset === 0) {
-            return; // Skip indentation
-        }
-
         linesToIndent = linesToIndent.map((line, index) => {
-            let x = leadingSpaces[index];
-            let chars = (index === 0 || x === -1) ? '' : indentChar.repeat(x - xmin + offset);
+            let tempChars = chars
 
-            return line.replace(/^\s*/, chars);
-        });
+            if (index === 0 && start.character !== 0) {
+                tempChars = '\n' + chars
+            }
+            
+            return tempChars + line
+        })
+
+        // Remove the last comma and add indentation
+        linesToIndent[linesToIndent.length-1] = linesToIndent[linesToIndent.length-1].slice(0,-1) + '\n' + lastIndent
 
         editor.edit(editBuilder => {
             editBuilder.replace(range, linesToIndent.join('\n'))
         })
-        
-        function getSelectedText(selection, document) {
-            let range = vscode.Range;
-
-            range = new vscode.Range(selection.start, selection.end);
-
-            return {
-                text: range ? document.getText(range) : undefined,
-                range
-            };
-        }
     });
 
     context.subscriptions.push(disposable);
