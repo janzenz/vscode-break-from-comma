@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [1.0]
 - Initial Release
 
-## [Unreleased]
-### Added
+## [1.1.0]
+### Changed
 - New Line support
 ```
 { a,
@@ -23,6 +23,10 @@ to
     c
 }
 ```
+
+## [1.1.2]
+### Added
+- Support for tabs
 
 ## [Unreleased]
 ### Added

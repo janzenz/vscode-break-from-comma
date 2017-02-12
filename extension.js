@@ -51,12 +51,13 @@ function activate(context) {
          */
         let linesToIndent = text.split(/,(?=(?:(?:[^'"]*(?:'|")){2})*[^'"]*$)/)
                             .map(t => t.replace(/\s/g,'') + ',')
-
-        const indentChar = editor.options.insertSpaces ? ' ' : '\t';
+        
+        const { insertSpaces, tabSize } = editor.options
+        const indentChar = insertSpaces ? ' ' : '\t';
         const start = editor.selection.start;
-        const offset = Math.ceil(start.character / editor.options.tabSize) * editor.options.tabSize;
+        const offset = Math.ceil(start.character / tabSize) * (insertSpaces ? tabSize : 1)
         const chars = indentChar.repeat(offset)
-        const lastOffset = offset - editor.options.tabSize
+        const lastOffset = offset - (insertSpaces ? tabSize : 1)
         const lastIndent = (lastOffset > 0) ? indentChar.repeat(lastOffset) : ''
         
         linesToIndent = linesToIndent.map((line, index) => {
