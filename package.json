@@ -2,7 +2,7 @@
     "name": "break-from-comma",
     "displayName": "Break From Comma!",
     "description": "Break comma separated values into a rows",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "publisher": "jzarzoso",
     "engines": {
         "vscode": "^1.5.0"
