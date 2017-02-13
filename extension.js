@@ -50,7 +50,7 @@ function activate(context) {
          )               end of look-ahead
          */
         let linesToIndent = text.split(/,(?=(?:(?:[^'"]*(?:'|")){2})*[^'"]*$)/)
-                            .map(t => t.replace(/\s/g,'') + ',')
+                            .map(t => t.trim() + ',')
         
         const { insertSpaces, tabSize } = editor.options
         const indentChar = insertSpaces ? ' ' : '\t';
