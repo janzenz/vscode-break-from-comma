@@ -28,6 +28,14 @@ to
 ### Added
 - Support for tabs
 
+## [1.1.3]
+### Fixed
+- Fix for spaces being removed.
+
+## [1.1.4]
+### Changed
+- New GIF Demo
+
 ## [Unreleased]
 ### Added
 - Multiple Cursor support
