@@ -40,6 +40,10 @@ to
 ### Changed
 - Fixed GIF Example
 
+## [1.1.6]
+### Changed
+- Fixed Release number
+
 ## [Unreleased]
 ### Added
 - Multiple Cursor support
