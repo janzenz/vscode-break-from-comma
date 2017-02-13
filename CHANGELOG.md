@@ -36,6 +36,10 @@ to
 ### Changed
 - New GIF Demo
 
+## [1.1.5]
+### Changed
+- Fixed GIF Example
+
 ## [Unreleased]
 ### Added
 - Multiple Cursor support
