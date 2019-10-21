@@ -1,4 +1,7 @@
-# README
+# DEPRECATED 😢
+I have since moved to [Prettier](https://prettier.io) and it’s way better tool for formatting. However, I'm keeping this project on Github for educational purposes and to remind myself that once upon a time I’ve done something good in the universe and tell it to my children and their children's children. 👴
+
+## What is this?
 
 This is a string manipulation tool for people who don't like very long comma separated list.
 
